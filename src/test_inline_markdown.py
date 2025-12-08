@@ -109,9 +109,9 @@ class TestInlineMarkdown(unittest.TestCase):
             [
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded", TextType.BOLD),
-                TextNode(" word", TextType.TEXT)
+                TextNode(" word", TextType.TEXT),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_bold_double(self):
@@ -124,9 +124,9 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded", TextType.BOLD),
                 TextNode(" word and ", TextType.TEXT),
-                TextNode("another", TextType.BOLD)
+                TextNode("another", TextType.BOLD),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_bold_multiword(self):
@@ -139,9 +139,9 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded word", TextType.BOLD),
                 TextNode(" and ", TextType.TEXT),
-                TextNode("another", TextType.BOLD)
+                TextNode("another", TextType.BOLD),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_italic(self):
@@ -151,9 +151,9 @@ class TestInlineMarkdown(unittest.TestCase):
             [
                 TextNode("This is text with an ", TextType.TEXT),
                 TextNode("italic", TextType.ITALIC),
-                TextNode(" word", TextType.TEXT)
+                TextNode(" word", TextType.TEXT),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_bold_and_italic(self):
@@ -164,9 +164,9 @@ class TestInlineMarkdown(unittest.TestCase):
             [
                 TextNode("bold", TextType.BOLD),
                 TextNode(" and ", TextType.TEXT),
-                TextNode("italic", TextType.ITALIC)
+                TextNode("italic", TextType.ITALIC),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_code(self):
@@ -176,9 +176,9 @@ class TestInlineMarkdown(unittest.TestCase):
             [
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("code block", TextType.CODE),
-                TextNode(" word", TextType.TEXT)
+                TextNode(" word", TextType.TEXT),
             ],
-            new_nodes
+            new_nodes,
         )
 
 
