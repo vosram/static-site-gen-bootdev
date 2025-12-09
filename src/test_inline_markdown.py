@@ -1,7 +1,11 @@
 import unittest
 
 from textnode import TextNode, TextType
-from inline_markdown import split_nodes_delimiter
+from inline_markdown import (
+    split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
+)
 
 
 class TestInlineMarkdown(unittest.TestCase):
@@ -179,6 +183,72 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
+        )
+
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_two_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and ![another image](https://i.imgur.com/zjjcJKR.png)"
+        )
+        self.assertListEqual(
+            [
+                ("image", "https://i.imgur.com/zjjcJKZ.png"),
+                ("another image", "https://i.imgur.com/zjjcJKR.png"),
+            ],
+            matches,
+        )
+
+    def test_extract_markdown_image_around_links(self):
+        # This test has markdown images and markdown links
+        # to see if it only picks up images and ignores the link
+        matches = extract_markdown_images(
+            "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg). This is link text with a [python docs link](https://docs.python.org/3/index.html) and [go lang](https://go.dev)"
+        )
+        self.assertListEqual(
+            [
+                ("rick roll", "https://i.imgur.com/aKaOqIh.gif"),
+                ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg"),
+            ],
+            matches,
+        )
+
+    def test_extract_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is text with a [cool link](https://docs.python.org/3/index.html)"
+        )
+        self.assertListEqual(
+            [("cool link", "https://docs.python.org/3/index.html")], matches
+        )
+
+    def test_extract_two_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is text with a [cool link](https://docs.python.org/3/index.html) and [another link](https://go.dev)"
+        )
+        self.assertListEqual(
+            [
+                ("cool link", "https://docs.python.org/3/index.html"),
+                ("another link", "https://go.dev"),
+            ],
+            matches,
+        )
+
+    def test_extract_links_around_images(self):
+        # This test has markdown images and markdown links
+        # to see if it only picks up links and ignores the images
+        matches = extract_markdown_links(
+            "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg). This is link text with a [python docs link](https://docs.python.org/3/index.html) and [go lang](https://go.dev)"
+        )
+        self.assertListEqual(
+            [
+                ("python docs link", "https://docs.python.org/3/index.html"),
+                ("go lang", "https://go.dev"),
+            ],
+            matches,
         )
 
 
