@@ -7,6 +7,7 @@ from inline_markdown import (
     extract_markdown_links,
     split_nodes_link,
     split_nodes_image,
+    text_to_textnodes,
 )
 
 
@@ -382,6 +383,57 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        result_nodes = text_to_textnodes(text)
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode(
+                    "obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"
+                ),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            result_nodes,
+        )
+
+    def test_text_to_textnodes_2(self):
+        text = "Another **example** of the _power_ of `markdown.md` to static html. Including ![cool images](https://images.example.com/img_001.jpg) and some [awesome links](https://example.com/about), cool huh?"
+        result_nodes = text_to_textnodes(text)
+        self.assertListEqual(
+            [
+                TextNode("Another ", TextType.TEXT),
+                TextNode("example", TextType.BOLD),
+                TextNode(" of the ", TextType.TEXT),
+                TextNode("power", TextType.ITALIC),
+                TextNode(" of ", TextType.TEXT),
+                TextNode("markdown.md", TextType.CODE),
+                TextNode(" to static html. Including ", TextType.TEXT),
+                TextNode(
+                    "cool images",
+                    TextType.IMAGE,
+                    "https://images.example.com/img_001.jpg",
+                ),
+                TextNode(" and some ", TextType.TEXT),
+                TextNode("awesome links", TextType.LINK, "https://example.com/about"),
+                TextNode(", cool huh?", TextType.TEXT),
+            ],
+            result_nodes,
+        )
+
+    def test_text_to_textnodes_invalid_markdown(self):
+        text = "This markdown text has **an invalid markdown syntax"
+
+        with self.assertRaises(ValueError):
+            nodes = text_to_textnodes(text)
 
 
 if __name__ == "__main__":

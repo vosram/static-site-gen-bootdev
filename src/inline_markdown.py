@@ -112,3 +112,20 @@ def node_split_helper(node, link_data, special_type):
     if node_text != "":
         links_nodes.append(TextNode(node_text, TextType.TEXT))
     return links_nodes
+
+
+def text_to_textnodes(text):
+
+    nodes = [TextNode(text, TextType.TEXT)]
+
+    # convert links and images first as urls might have _ chars
+    # and this can cause issues for italic delimiter parsing.
+    nodes = split_nodes_link(nodes)
+    nodes = split_nodes_image(nodes)
+
+    # bold, italic, and code parsers
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+
+    return nodes
