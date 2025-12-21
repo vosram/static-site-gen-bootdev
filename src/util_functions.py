@@ -2,6 +2,7 @@ import os
 import shutil
 import re
 from markdown_blocks import markdown_to_html_node
+from pathlib import Path
 
 
 def copy_static_to_public():
@@ -95,3 +96,24 @@ def generate_page(from_path, template_path, dest_path):
     # write new content to dest_path
     with open(dest_path, "w") as dest_file:
         dest_file.write(output_file)
+
+
+def generate_pages_recursively(dir_path_content, template_path, dest_dir_path):
+    if not os.path.exists(dir_path_content):
+        raise ValueError(f"from_path -> {from_path} does not exist")
+    if not os.path.exists(template_path):
+        raise ValueError(f"template_path -> {template_path} does not exist")
+
+    files_list = os.listdir(dir_path_content)
+
+    for path in files_list:
+        full_src_path = os.path.join(dir_path_content, path)
+        if os.path.isfile(full_src_path):
+            print(f"file -> {full_src_path}")
+            to_convert_path = Path(os.path.join(dest_dir_path, path))
+            full_convert_path = f"{to_convert_path.parent / to_convert_path.stem}.html"
+            generate_page(full_src_path, template_path, full_convert_path)
+        else:
+            print(f"directory -> {full_src_path}")
+            to_convert_path = os.path.join(dest_dir_path, path)
+            generate_pages_recursively(full_src_path, "template.html", to_convert_path)
