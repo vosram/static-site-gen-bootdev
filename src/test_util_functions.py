@@ -1,14 +1,14 @@
 import unittest
 
-from util_functions import replace_static_to_public_paths, extract_title
+from util_functions import replace_static_to_output_paths, extract_title
 
 
 class TestUtilFuncs(unittest.TestCase):
     def test_replace_base_dir(self):
-        output0 = replace_static_to_public_paths("static")
-        output1 = replace_static_to_public_paths("static/images")
-        output2 = replace_static_to_public_paths("static/images/graphics")
-        output3 = replace_static_to_public_paths("static/assets")
+        output0 = replace_static_to_output_paths("static", "public")
+        output1 = replace_static_to_output_paths("static/images", "public")
+        output2 = replace_static_to_output_paths("static/images/graphics", "public")
+        output3 = replace_static_to_output_paths("static/assets", "public")
         self.assertEqual(output0, "public")
         self.assertEqual(output1, "public/images")
         self.assertEqual(output2, "public/images/graphics")
